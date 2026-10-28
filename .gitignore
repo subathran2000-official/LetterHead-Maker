@@ -1,2 +1,13 @@
 node_modules/
 dist/
+
+# Code-signing material must never be committed
+*.pfx
+*.p12
+*.pem
+*.key
+*.cer
+*.snk
+signing.env
+.env
+.env.*

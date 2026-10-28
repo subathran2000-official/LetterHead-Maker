@@ -9,7 +9,9 @@
   "scripts": {
     "start": "electron .",
     "dist": "electron-builder --win",
-    "dist:portable": "electron-builder --win portable"
+    "dist:portable": "electron-builder --win portable",
+    "dist:signed": "node scripts/build-signed.js",
+    "verify:signature": "node scripts/verify-signature.js"
   },
   "build": {
     "appId": "com.letterheadmaker.app",

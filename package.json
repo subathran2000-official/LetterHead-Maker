@@ -1,0 +1,41 @@
+{
+  "name": "letterhead-maker",
+  "productName": "Letterhead Maker",
+  "version": "1.0.0",
+  "description": "Create professional letterheads and export locked, read-only PDFs",
+  "main": "src/main.js",
+  "author": "Letterhead Maker",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win",
+    "dist:portable": "electron-builder --win portable"
+  },
+  "build": {
+    "appId": "com.letterheadmaker.app",
+    "productName": "Letterhead Maker",
+    "asar": true,
+    "files": [
+      "src/**/*",
+      "assets/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "assets/letterhead-maker-icon.png"
+    },
+    "fileAssociations": [
+      {
+        "ext": "blt",
+        "name": "Letterhead Maker Template"
+      }
+    ]
+  },
+  "dependencies": {
+    "@cantoo/pdf-lib": "^2.11.1"
+  },
+  "devDependencies": {
+    "electron": "^45.0.0",
+    "electron-builder": "^26.18.0"
+  }
+}

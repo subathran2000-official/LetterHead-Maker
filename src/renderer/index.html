@@ -1,0 +1,148 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; frame-src 'self' about: data:">
+  <title>Letterhead Maker</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="brand"><img src="../../assets/letterhead-maker-logo.png" alt="Letterhead Maker"></div>
+    <button id="btnNewLetter" class="primary">+ New letter</button>
+    <button id="btnNew">New template…</button>
+    <div class="row"><button id="btnImport">Import .blt</button><button id="btnVerify">Verify PDF</button></div>
+    <h4>Letterheads &amp; letters</h4>
+    <ul id="templateList"></ul>
+    <button id="btnIssued" class="ghost">Issued documents</button>
+    <div class="row"><button id="btnPin" class="ghost">Change PIN</button><button id="btnLock" class="ghost">🔒 Lock</button></div>
+    <div class="credit"><span>Created by AK Vision Systems</span><span><a href="#" id="lnkSite">Visit our website</a> · <a href="#" id="lnkAbout">About</a></span></div>
+  </aside>
+
+  <main class="editor">
+    <div id="setupBar" class="setupBar" hidden><b>Set up your letterhead.</b> Enter your company details, logo, colours and font, then press <b>Save as my default letterhead</b>. It will open automatically every time.</div>
+    <form id="form">
+      <section>
+        <h3>Template</h3>
+        <label>Template name<input name="name"></label>
+        <label>Page size
+          <select name="pageSize"><option value="letter">US Letter (8.5 × 11 in)</option><option value="a4">A4 (210 × 297 mm)</option></select>
+        </label>
+        <label>Layout
+          <select name="layout"></select>
+        </label>
+        <label>Font
+          <select name="font">
+            <option value="Georgia, serif">Georgia (serif)</option>
+            <option value="'Times New Roman', serif">Times New Roman</option>
+            <option value="'Segoe UI', Arial, sans-serif">Segoe UI (sans)</option>
+            <option value="'Trebuchet MS', sans-serif">Trebuchet</option>
+          </select>
+        </label>
+        <div class="row">
+          <label>Primary<input type="color" name="primary"></label>
+          <label>Accent<input type="color" name="accent"></label>
+        </div>
+      </section>
+
+      <section>
+        <h3>Company</h3>
+        <div class="logoBox">
+          <div class="logoThumb" id="logoDrop" title="Drop a PNG or JPG here"><img id="logoPreview" alt=""><span id="logoEmpty">No logo yet<br><small>Drop an image here</small></span></div>
+          <div class="logoBtns"><button type="button" id="btnLogo" class="primary">Upload logo</button><button type="button" id="btnNoLogo" class="ghost">Remove logo</button></div>
+        </div>
+        <p class="hint">PNG or JPG, up to 5 MB. A transparent PNG looks best. Your logo is shown on a light panel when the header is dark.</p>
+        <label>Company name<input name="company"></label>
+        <label>Tagline<input name="tagline"></label>
+        <label>Address<input name="address"></label>
+        <div class="row">
+          <label>Phone<input name="phone"></label>
+          <label>Email<input name="email"></label>
+        </div>
+        <label>Website<input name="website"></label>
+      </section>
+
+      <section>
+        <h3>Content</h3>
+        <label class="check"><input type="checkbox" name="showRef"> Show reference &amp; date line</label>
+        <div class="row">
+          <label>Ref no.<input name="refNo"></label>
+          <label>Date<input name="date"></label>
+        </div>
+        <div class="row">
+          <label>Font size (pt)<input type="number" name="fontSize" min="8" max="16" step="0.5"></label>
+          <label>Alignment
+            <select name="align"><option value="left">Left</option><option value="justify">Justified</option><option value="center">Center</option></select>
+          </label>
+        </div>
+        <label>Body (optional — leave empty for a blank letterhead)<textarea name="body" rows="10"></textarea></label>
+        <p class="hint">Type <code>[page]</code> on its own line to start a new page.</p>
+        <label>Footer<textarea name="footer" rows="2"></textarea></label>
+        <label>Watermark
+          <select name="watermark">
+            <option value="none">None</option>
+            <option value="logo">Logo</option>
+            <option value="text">Text</option>
+          </select>
+        </label>
+        <label>Watermark text<input name="watermarkText"></label>
+      </section>
+
+      <section>
+        <h3>Signature</h3>
+        <label class="check"><input type="checkbox" name="showSignature"> Show signature block</label>
+        <label>Closing<input name="signClosing" placeholder="Yours sincerely,"></label>
+        <div class="logoRow"><img id="sigPreview"><button type="button" id="btnSig">Signature image</button><button type="button" id="btnNoSig" class="ghost">Remove</button></div>
+        <div class="row">
+          <label>Name<input name="signName"></label>
+          <label>Title<input name="signTitle"></label>
+        </div>
+      </section>
+    </form>
+  </main>
+
+  <section class="preview">
+    <div class="toolbar">
+      <span id="status"></span>
+      <button id="btnDesign">Change design</button>
+      <button id="btnDefault">★ Save as my default letterhead</button>
+      <button id="btnSave">Save</button>
+      <button id="btnShare">Export .blt</button>
+      <button id="btnDup">Duplicate</button>
+      <button id="btnDelete" class="ghost danger">Delete</button>
+      <button id="btnPdf" class="primary">Export locked PDF</button>
+    </div>
+    <div class="pager"><button id="pgPrev">‹</button><span id="pgInfo"></span><button id="pgNext">›</button><button id="zOut">−</button><button id="zFit">Fit</button><button id="zIn">+</button><span id="zInfo"></span><span class="size" id="pgSize"></span></div>
+    <div class="paperWrap"><div id="paperBox"><iframe id="paper" sandbox="allow-same-origin"></iframe></div></div>
+  </section>
+
+  <div id="gallery" class="gallery" hidden>
+    <div class="galHead"><div><h2 id="galTitle"></h2><p id="galSub"></p></div><button id="galCancel" type="button" class="ghost">Cancel</button></div>
+    <div class="galBody">
+      <div id="galGrid" class="galGrid"></div>
+      <aside class="galSide">
+        <div class="galPreviewBox"><iframe id="galPreview" sandbox="allow-same-origin" tabindex="-1"></iframe></div>
+        <div id="galName" class="galName"></div>
+        <div id="galActions" class="galActions"></div>
+      </aside>
+    </div>
+  </div>
+
+  <div id="lock" class="lock">
+    <div class="lockBox">
+      <img src="../../assets/letterhead-maker-logo.png" alt="Letterhead Maker">
+      <h2>Letterhead Maker</h2>
+      <p id="lockMsg">Enter your PIN</p>
+      <input id="pin" type="password" inputmode="numeric" maxlength="8" autofocus>
+      <input id="pin2" type="password" inputmode="numeric" maxlength="8" placeholder="Confirm PIN" hidden>
+      <button id="btnUnlock" class="primary">Unlock</button>
+      <p id="lockErr" class="bad"></p>
+    </div>
+  </div>
+
+  <dialog id="modal"><div id="modalBody"></div><form method="dialog"><button>Close</button></form></dialog>
+
+  <script src="../lib/letterhead.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
